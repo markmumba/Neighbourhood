@@ -1,16 +1,18 @@
 {%extends "registration/base.html"%}
  {% load bootstrap4 %}
+ {% load static %}
 {% block content %}
-<div class="container">
+
   <div class="row">
     <!-- Empty div -->
-    <div class="col-md-4"></div>
+    <div class="col-md-4" >
+      <img src="{%static 'images/fleur-de-lis-1293406_960_720.png' %}" alt="">
+    </div>
     <div class="col-md-4">
       {% if form.errors %}
         <p> Some Information Might be Incorrect </p>
       {% endif %}
       <div class="panel panel-default">
-
         <div class="panel-heading">
           <h3 class="text-center">Sign Up</h3>
         </div>
@@ -32,14 +34,16 @@
       </div>
       <div class="panel panel-default">
         <div class="panel-body text-center">
-          <p> Don't have an account? <span><a class="" href="/accounts/login">Sign In</a></span></p>
+          <p> Already  have an account? <span><a class="" href="/accounts/login">Sign In</a></span></p>
 
         </div>
 
     </div>
     <!-- empty div -->
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+     
+    </div>
   </div>
-</div>
+
 
 {% endblock %}

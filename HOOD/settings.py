@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'HOOD.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postresql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME':'neighbourhood',
         'USER':'mark',
         'PASSWORD':'123',

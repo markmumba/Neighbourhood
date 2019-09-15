@@ -54,7 +54,7 @@ def update_profile(request):
             profile.username = current_user
             profile.save()
 
-        return redirect('Index')
+        return redirect('profile')
 
     elif Profile.objects.get(username=current_user):
         profile = Profile.objects.get(username=current_user)

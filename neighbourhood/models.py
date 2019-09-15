@@ -37,7 +37,3 @@ class Neighbourhood(models.Model):
     def delete_neighbourhood(cls, neighbourhood):
         cls.objects.filter(neighbourhood=neighbourhood).delete()
 
-class Blog(models.Model):
-    title =models.CharField(max_length=150)
-    image =models.ImageField(upload_to='post/')
-    post = HTMLField()

@@ -5,62 +5,46 @@
 
 
 
+{% load bootstrap3 %}
+{% load staticfiles %}
 
-<style>
-    .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        max-width: 900px;
-        margin: auto;
-        text-align: center;
-    }
+<!DOCTYPE html>
+<html>
 
-    .title {
-        color: grey;
-        font-size: 18px;
-    }
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    button {
-        border: none;
-        outline: 0;
-        display: inline-block;
-        padding: 8px;
-        color: white;
-        background-color: #000;
-        text-align: center;
-        cursor: pointer;
-        width: 100%;
-        font-size: 18px;
-    }
+    <title>New Profile</title>
+    {{form.media}}
 
-    a {
-        text-decoration: none;
-        font-size: 22px;
-        color: black;
-    }
+    {% block styles %} {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
-    button:hover,
-    a:hover {
-        opacity: 0.7;
-    }
-</style>
-<!-- Add icon library -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% endblock %}
 
-<div class="card" style="width: 9000px; height: 800px; margin-top: 2%;">
-    <img src="{{profile.profile_photo.url}}" alt="John" style="width:900px;">
-    <h1>{{profile.user}}</h1>
-    <p class="title">{{profile.bio}}</p>
-    <p>{{profile.email}}</p>
-    <a href="#"><i class="fa fa-dribbble"></i></a>
-    <a href="#"><i class="fa fa-twitter"></i></a>
-    <a href="#"><i class="fa fa-linkedin"></i></a>
-    <a href="#"><i class="fa fa-facebook"></i></a>
-    <p><button>Contact</button></p>
-</div>
+</head>
 
-<div class="update profile">
-    Hey there wanna Update your profile
-    <a class="" href="{% url 'update-profile' %}">Edit Profile</a>
-</div>
+<body>
 
-{% endblock %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form action="{% url 'new-profile'%}" method="post" enctype="multipart/form-data">
+
+                {% csrf_token%}
+                {% bootstrap_form form %}
+                <div class="form-group text-center">
+                    <input type="submit" class="btn btn-primary sign-up-button" value="Share">
+                </div>
+                <input type="hidden" name="next" value="{{next}}">
+            </form>
+        </div>
+    </div>
+
+    {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% bootstrap_javascript %} {% endblock %}
+
+</body>
+
+</html>

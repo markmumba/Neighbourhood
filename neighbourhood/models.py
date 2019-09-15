@@ -19,35 +19,15 @@ class Profile(models.Model):
         self.delete()
 
 
-class Location(models.Model):
-    name = models.CharField(max_length=30)
+class neighbourhood(models.Model):
+    neighbourhood = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return self.neighbourhood
 
-
-class NeighbourHood(models.Model):
-    name = models.CharField(max_length=40)
-    location = models.ForeignKey(Location, on_delete==models.CASCADE)
-    occupants=models.IntegerField(null=True, default=0)
-    
-    def __str__(self):
-        return self.name
-
-    def create_neighborhood(self):
+    def save_neighbourhood(self):
         self.save()
-
-    def delete_neighborhood(self):
-        self.delete()
 
     @classmethod
-    def find_neighborhood(cls,neigborhood_id):
-        neighborhood = cls.objects.get(id = neigborhood_id)
-        return neighborhood
-
-    def update_neighborhood(self):
-        self.save()
-
-    def update_occupants(self):
-        self.occupants += 1
-        self.save()
+    def delete_neighbourhood(cls, neighbourhood):
+        cls.objects.filter(neighbourhood=neighbourhood).delete()

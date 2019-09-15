@@ -63,6 +63,11 @@
     <p>{{business.email}}</p>
     </div>
     {% endfor %}
+    <div class="text-center">
+        <a href="{% url 'new-business' %}">
+            <button class="btn btn-primary" style="height:50px;  margin-top: -6px;">Register Business</button>
+        </a>
+    </div>
 
 
 {% endblock %}

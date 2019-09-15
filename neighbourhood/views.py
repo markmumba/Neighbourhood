@@ -8,6 +8,18 @@ from .forms import *
 
 
 # Create your views here.
+def home(request):
+    try:
+        if not request.user.is_authenticated:
+            return redirect('/account/login/')
+        current_user = request.user
+        profile=Profile.objects.get(username=current_user)
+    except ObjectDoesNotExist:
+        return redirect('create_profile')
+    return render (request,'index.html')
+
+
+
 @login_required(login_url='/accounts/login/')
 def profile(request):
     current_user = request.user
@@ -54,7 +66,7 @@ def update_profile(request):
 
 @login_required(login_url='/accounts/login/')
 def blog(request):
-    current user = request.user
+    current_user = request.user
     profile=Profile.objects.get(username=current_user)
     blog = Blog.objects.filter(neighbour=profile.neighbourhood)
     

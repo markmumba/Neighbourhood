@@ -4,10 +4,27 @@ from tinymce.models import HTMLField
 # Create your models here.
 
 
+
+
+class Neighbourhood(models.Model):
+    neighbourhood = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.neighbourhood
+
+    def save_neighbourhood(self):
+        self.save()
+
+    @classmethod
+    def delete_neighbourhood(cls, neighbourhood):
+        cls.objects.filter(neighbourhood=neighbourhood).delete()
+
+
+
 class Profile(models.Model):
     profile_photo = models.ImageField(upload_to='profile/', null=True)
     user = models.TextField(null=True)
-    neighbourhood=models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
+    neighbourhood=models.ForeignKey(Neighbourhood,null=True,on_delete=models.CASCADE)
     username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     email = models.EmailField(null=True)
 
@@ -24,25 +41,14 @@ class Profile(models.Model):
 
 
 
-class Neighbourhood(models.Model):
-    neighbourhood = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.neighbourhood
-
-    def save_neighbourhood(self):
-        self.save()
-
-    @classmethod
-    def delete_neighbourhood(cls, neighbourhood):
-        cls.objects.filter(neighbourhood=neighbourhood).delete()
 
 class Blog(models.Model):
     title = models.CharField(max_length=150)
     image = models.ImageField(upload_to='post/')
     post = HTMLField()
     username = models.ForeignKey(User,on_delete=models.CASCADE)
-    neighbourhood= models.ForeignKey(neighbourhood,on_delete=models.CASCADE)
+    neighbourhood= models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
     post_date = models.DateTimeField(auto_now_add=True)
     profile_image= models.ImageField(upload_to='profile/')
 

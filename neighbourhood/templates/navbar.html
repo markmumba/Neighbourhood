@@ -1,8 +1,9 @@
 {% extends 'base.html'  %}
 {% load bootstrap4 %}
-{load static}
+{% load static %}
+{%block %}
+{% if user.is_authenticated %}
 <div id="myNav" class="overlay">
-        {% if user.is_authenticated %}
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <div class="overlay-content" style="font-family: 'Montserrat', sans-serif; font-size: 30px;">
         <a href="{% url 'myProfile'%}">Profile</a>
@@ -20,7 +21,7 @@
 
 {% endif %}
 <span style="font-size:30px;cursor:pointer" onclick="openNav()"><img
-        src="{%static 'images/menu-button-of-three-horizontal-lines.png' %}"></span>
+        src="{% static 'images/menu-button-of-three-horizontal-lines.png' %}"></span>
 
 
 <script>
@@ -31,3 +32,4 @@
         document.getElementById("myNav").style.height = "0%";
     }
 </script>
+{% endblock %}

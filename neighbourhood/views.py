@@ -80,3 +80,13 @@ def new_blog(request):
         form = BlogForm()
 
     return render(request,'blog_form.html',{"form":form})
+
+
+@login_required(login_url='/accounts/login/')
+def business(request):
+    current_user=request.user
+    profile=Profile.objects.get(username=current_user)
+    business=Business.objects.filter(neighbourhood=profile.neighbourhood)
+
+    return render (request,'business.html',{'business':business})
+    

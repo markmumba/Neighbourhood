@@ -59,3 +59,24 @@ def blog(request):
     blog = Blog.objects.filter(neighbour=profile.neighbourhood)
     
     return render (request,'blog.html',{'blog':blog})
+
+@login_required(login_url='/accounts/login/')
+def new_blog(request):
+    current_user=request.user
+    profile =Profile.objects.get(username=current_user)
+
+    if request.method=="POST":
+        form =BlogForm(request.POST,request.FILES)
+        if form.is_valid():
+            blog = form.save(commit = False)
+            blog.username = current_user
+            blog.neighbourhood = profile.neighbourhood
+            blog.profile_image = profile.profile_image
+            blog.save()
+
+        return HttpResponseRedirect('blog')
+
+    else:
+        form = BlogForm()
+
+    return render(request,'blog_form.html',{"form":form})

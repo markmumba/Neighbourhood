@@ -37,3 +37,14 @@ class Neighbourhood(models.Model):
     def delete_neighbourhood(cls, neighbourhood):
         cls.objects.filter(neighbourhood=neighbourhood).delete()
 
+class Blog(models.Model):
+    title = models.CharField(max_length=150)
+    image = models.ImageField(upload_to='post/')
+    post = HTMLField()
+    username = models.ForeignKey(User,on_delete=models.CASCADE)
+    neighbourhood= models.ForeignKey(neighbourhood,on_delete=models.CASCADE)
+    post_date = models.DateTimeField(auto_now_add=True)
+    profile_image= models.ImageField(upload_to='profile/')
+
+    def __str__(self):
+        return self.title

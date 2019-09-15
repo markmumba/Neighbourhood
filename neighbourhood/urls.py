@@ -9,5 +9,6 @@ urlpatterns=[
     url(r'^accounts/profile/', views.profile, name='myProfile'),
     url(r'^create/profile$',views.create_profile, name='new-profile'),
     url(r'^update/profile$',views.update_profile, name='update-profile'),
+    url(r'^blog',views.blog, name='blog'),
 
 ]

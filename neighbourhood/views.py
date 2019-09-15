@@ -51,3 +51,11 @@ def update_profile(request):
         form = ProfileForm()
 
     return render(request,'update_profile.html',{"form":form})
+
+@login_required(login_url='/accounts/login/')
+def blog(request):
+    current user = request.user
+    profile=Profile.objects.get(username=current_user)
+    blog = Blog.objects.filter(neighbour=profile.neighbourhood)
+    
+    return render (request,'blog.html',{'blog':blog})

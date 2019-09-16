@@ -1,56 +1,57 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.shortcuts import render,redirect
+from django.http import HttpResponse,Http404,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from .models import *
 from .forms import *
-
-
+from .models import *
 # Create your views here.
-def home(request):
+
+def index(request):
     try:
         if not request.user.is_authenticated:
             return redirect('/accounts/login/')
-        current_user = request.user
-        profile = Profile.objects.get(username=current_user)
+        current_user=request.user
+        profile =Profile.objects.get(username=current_user)
     except ObjectDoesNotExist:
         return redirect('create-profile')
-    return render(request, 'index.html')
+    return render(request,'index.html')
 
 
 @login_required(login_url='/accounts/login/')
-def profile(request):
-    current_user = request.user
-    profile = Profile.objects.get(username=current_user)
+def my_profile(request):
+    current_user=request.user
+    profile =Profile.objects.get(username=current_user)
+    return render(request,'profile.html',{"profile":profile})
 
-    return render(request, 'profile.html', {'profile': profile})
 
+@login_required(login_url='/accounts/login/')
+def user_profile(request,username):
+    user = User.objects.get(username=username)
+    profile =Profile.objects.get(username=user)
 
 @login_required(login_url='/accounts/login/')
 def create_profile(request):
-    current_user = request.user
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES)
+    current_user=request.user
+    if request.method=="POST":
+        form =ProfileForm(request.POST,request.FILES)
         if form.is_valid():
-            profile = form.save(commit=False)
+            profile = form.save(commit = False)
             profile.username = current_user
-
             profile.save()
-        return redirect('project_all')
+        return HttpResponseRedirect('/')
     else:
         form = ProfileForm()
-
-    return render(request, 'new-profile.html', {"form": form})
-
+        return render(request,'new-profile.html',{"form":form})
+    
 
 @login_required(login_url='/accounts/login/')
 def update_profile(request):
-    current_user = request.user
-    if request.method == "POST":
+    current_user=request.user
+    if request.method=="POST":
         instance = Profile.objects.get(username=current_user)
-        form = ProfileForm(request.POST, request.FILES, instance=instance)
+        form =ProfileForm(request.POST,request.FILES,instance=instance)
         if form.is_valid():
-            profile = form.save(commit=False)
+            profile = form.save(commit = False)
             profile.username = current_user
             profile.save()
 
@@ -62,63 +63,146 @@ def update_profile(request):
     else:
         form = ProfileForm()
 
-    return render(request, 'update_profile.html', {"form": form})
+    return render(request,'updateprofile.html',{"form":form})
 
 
 @login_required(login_url='/accounts/login/')
 def blog(request):
-    current_user = request.user
-    profile = Profile.objects.get(username=current_user)
-    blog = Blog.objects.filter(neighbour=profile.neighbourhood)
+    current_user=request.user
+    profile=Profile.objects.get(username=current_user)
+    blogposts = BlogPost.objects.filter(neighbourhood=profile.neighbourhood)
 
-    return render(request, 'blog.html', {'blog': blog})
+    return render(request,'blog.html',{"blogposts":blogposts})
+
+@login_required(login_url='/accounts/login/')
+def view_blog(request,id):
+    current_user = request.user
+
+    try:
+        comments = Comment.objects.filter(post_id=id)
+    except:
+        comments =[]
+
+    blog = BlogPost.objects.get(id=id)
+    if request.method =='POST':
+        form = CommentForm(request.POST,request.FILES)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.username = current_user
+            comment.post = blog
+            comment.save()
+    else:
+        form = CommentForm()
+
+    return render(request,'view_blog.html',{"blog":blog,"form":form,"comments":comments})
 
 
 @login_required(login_url='/accounts/login/')
-def new_blog(request):
-    current_user = request.user
-    profile = Profile.objects.get(username=current_user)
+def new_blogpost(request):
+    current_user=request.user
+    profile =Profile.objects.get(username=current_user)
 
-    if request.method == "POST":
-        form = BlogForm(request.POST, request.FILES)
+    if request.method=="POST":
+        form =BlogPostForm(request.POST,request.FILES)
         if form.is_valid():
-            blog = form.save(commit=False)
-            blog.username = current_user
-            blog.neighbourhood = profile.neighbourhood
-            blog.profile_image = profile.profile_image
-            blog.save()
+            blogpost = form.save(commit = False)
+            blogpost.username = current_user
+            blogpost.neighbourhood = profile.neighbourhood
+            blogpost.profpic = profile.profpic
+            blogpost.save()
 
-        return HttpResponseRedirect('blog')
+        return HttpResponseRedirect('/blog')
 
     else:
-        form = BlogForm()
+        form = BlogPostForm()
 
-    return render(request, 'blog_form.html', {"form": form})
+    return render(request,'new_blog.html',{"form":form})
 
 
 @login_required(login_url='/accounts/login/')
-def business(request):
-    current_user = request.user
-    profile = Profile.objects.get(username=current_user)
-    business = Business.objects.filter(neighbourhood=profile.neighbourhood)
+def businesses(request):
+    current_user=request.user
+    profile=Profile.objects.get(username=current_user)
+    businesses = Business.objects.filter(neighbourhood=profile.neighbourhood)
 
-    return render(request, 'business.html', {'business': business})
-
+    return render(request,'business.html',{"businesses":businesses})
 
 @login_required(login_url='/accounts/login/')
 def new_business(request):
-    current_user = request.user
-    profile = Profile.objects.get(username=current_user)
+    current_user=request.user
+    profile =Profile.objects.get(username=current_user)
 
-    if request.method == "POST":
-        form = BusinessForm(request.POST, request.FILES)
+    if request.method=="POST":
+        form =BusinessForm(request.POST,request.FILES)
         if form.is_valid():
-            business = form.save(commit=False)
+            business = form.save(commit = False)
             business.owner = current_user
             business.neighbourhood = profile.neighbourhood
             business.save()
-        return HttpResponseRedirect('business')
+
+        return HttpResponseRedirect('/businesses')
+
     else:
         form = BusinessForm()
 
-    return render(request, 'business_form.html', {'form': form})
+    return render(request,'business_form.html',{"form":form})
+
+@login_required(login_url='/accounts/login/')
+def health(request):
+    current_user=request.user
+    profile=Profile.objects.get(username=current_user)
+    healthservices = Health.objects.filter(neighbourhood=profile.neighbourhood)
+
+    return render(request,'health.html',{"healthservices":healthservices})
+
+@login_required(login_url='/accounts/login/')
+def authorities(request):
+    current_user=request.user
+    profile=Profile.objects.get(username=current_user)
+    authorities = Authorities.objects.filter(neighbourhood=profile.neighbourhood)
+
+    return render(request,'authorities.html',{"authorities":authorities})
+
+
+@login_required(login_url='/accounts/login/')
+def notification(request):
+    current_user=request.user
+    profile=Profile.objects.get(username=current_user)
+    all_notifications = notifications.objects.filter(neighbourhood=profile.neighbourhood)
+
+    return render(request,'notifications.html',{"notifications":all_notifications})
+
+@login_required(login_url='/accounts/login/')
+def new_notification(request):
+    current_user=request.user
+    profile =Profile.objects.get(username=current_user)
+
+    if request.method=="POST":
+        form =notificationsForm(request.POST,request.FILES)
+        if form.is_valid():
+            notification = form.save(commit = False)
+            notification.author = current_user
+            notification.neighbourhood = profile.neighbourhood
+            notification.save()
+        return HttpResponseRedirect('/notifications')
+    else:
+        form = notificationsForm()
+
+    return render(request,'notificationsForm.html',{"form":form})
+
+@login_required(login_url='/accounts/login/')
+def search_results(request):
+    current_user = request.user
+    profile =Profile.objects.get(username=current_user)
+    if 'business' in request.GET and request.GET["business"]:
+        search_term = request.GET.get("business")
+        searched_businesses = Business.search_business(search_term)
+        message=f"{search_term}"
+
+        print(searched_businesses)
+
+        return render(request,'business/search.html',{"message":message,"businesses":searched_businesses,"profile":profile})
+
+    else:
+        message="You haven't searched for any term"
+        return render(request,'business/search.html',{"message":message})

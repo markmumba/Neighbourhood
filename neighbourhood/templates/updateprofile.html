@@ -1,12 +1,8 @@
 {%extends "base.html"%}
 {% load bootstrap3 %}
-{% block content %}
 {% load static %}
+{% block content %}
 
-
-
-{% load bootstrap3 %}
-{% load staticfiles %}
 
 <!DOCTYPE html>
 <html>
@@ -18,10 +14,10 @@
     <title>New Profile</title>
     {{form.media}}
 
-    {% block styles %} {% bootstrap_css %}
+    {% block styles %} 
+    {% bootstrap_css %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
-    {% endblock %}
+ {% endblock %}
 
 </head>
 
@@ -30,7 +26,6 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <form action="{% url 'new-profile'%}" method="post" enctype="multipart/form-data">
-
                 {% csrf_token%}
                 {% bootstrap_form form %}
                 <div class="form-group text-center">
@@ -48,3 +43,4 @@
 </body>
 
 </html>
+{% endblock %}

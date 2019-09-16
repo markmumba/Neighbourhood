@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from decouple import config
+
 import django_heroku
 import dj_database_url
 
@@ -81,18 +81,14 @@ WSGI_APPLICATION = 'HOOD.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':config('DB_NAME'),
-        'USER':config('DB_USER'),
-        'PASSWORD':config('DB_HOST')
+        'NAME':'neighbourhood',
+        'USER':'mark',
+        'PASSWORD':'123',
     }
 }
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
-
 
 LOGIN_REDIRECT_URL='Index'
 LOGIN_URL='login'
